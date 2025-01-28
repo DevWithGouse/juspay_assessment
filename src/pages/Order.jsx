@@ -2,7 +2,6 @@ import React, { useState, useMemo } from "react"
 import { Plus, ArrowUpDown, Search, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 import AddOrderDialog from "../components/AddOrderDialog"
 
-// Generate more sample data
 const generateOrders = (count) => {
   const users = [
     { name: "Natali Craig", avatar: "/men.svg?height=32&width=32" },

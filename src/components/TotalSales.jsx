@@ -1,12 +1,13 @@
-import React, { useState } from "react"
-import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from "recharts"
+import React, { useState } from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from "recharts";
+import { motion } from "framer-motion";
 
 const data = [
   { name: "Direct", value: 300.56, color: "#1C1C1C" },
   { name: "Affiliate", value: 135.18, color: "#BAEDBD" },
   { name: "E-mail", value: 48.96, color: "#B1E3FF" },
   { name: "Sponsored", value: 154.02, color: "#95A4FC" },
-]
+];
 
 const renderActiveShape = (props) => {
   const {
@@ -17,35 +18,30 @@ const renderActiveShape = (props) => {
     startAngle,
     endAngle,
     fill,
-    percent
+    percent,
   } = props;
 
   const midAngle = startAngle + (endAngle - startAngle) / 2;
   const radius = outerRadius + 20;
-  
-  // Adjust position based on angle to prevent going out of bounds
-  let x = cx + radius * Math.cos(-midAngle * Math.PI / 180);
-  let y = cy + radius * Math.sin(-midAngle * Math.PI / 180);
-  
-  // Adjust x position if too close to edges
+  let x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
+  let y = cy + radius * Math.sin((-midAngle * Math.PI) / 180);
   const containerWidth = cx * 2;
   const labelWidth = 80;
   const padding = 10;
-  
-  if (x + labelWidth/2 + padding > containerWidth) {
-    x = containerWidth - labelWidth/2 - padding;
-  } else if (x - labelWidth/2 - padding < 0) {
-    x = labelWidth/2 + padding;
+
+  if (x + labelWidth / 2 + padding > containerWidth) {
+    x = containerWidth - labelWidth / 2 - padding;
+  } else if (x - labelWidth / 2 - padding < 0) {
+    x = labelWidth / 2 + padding;
   }
-  
-  // Adjust y position if too close to edges
+
   const containerHeight = cy * 2;
   const labelHeight = 30;
-  
-  if (y + labelHeight/2 + padding > containerHeight) {
-    y = containerHeight - labelHeight/2 - padding;
-  } else if (y - labelHeight/2 - padding < 0) {
-    y = labelHeight/2 + padding;
+
+  if (y + labelHeight / 2 + padding > containerHeight) {
+    y = containerHeight - labelHeight / 2 - padding;
+  } else if (y - labelHeight / 2 - padding < 0) {
+    y = labelHeight / 2 + padding;
   }
 
   return (
@@ -65,37 +61,38 @@ const renderActiveShape = (props) => {
         y={y - 15}
         width={80}
         height={30}
-        style={{
-          overflow: 'visible'
-        }}
+        style={{ overflow: "visible" }}
       >
-        <div
+        <motion.div
           className="px-3 py-1.5 bg-gray-800/95 text-white text-xs font-medium rounded-md shadow-lg"
           style={{
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            whiteSpace: 'nowrap'
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            whiteSpace: "nowrap",
           }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
         >
           {`${(percent * 100).toFixed(1)}%`}
-        </div>
+        </motion.div>
       </foreignObject>
     </g>
   );
 };
 
 export default function TotalSales() {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const onPieEnter = (_, index) => {
-    setActiveIndex(index)
-  }
+    setActiveIndex(index);
+  };
 
   return (
     <div className="p-5 bg-card-background rounded-xl">
-      <h3 className="text-xl font-semibold  text-gray-900 dark:text-white mb-1">
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
         Total Sales
       </h3>
       <div className="h-40 relative">
@@ -115,10 +112,13 @@ export default function TotalSales() {
               cornerRadius={16}
             >
               {data.map((entry, index) => (
-                <Cell 
-                  key={`cell-${index}`} 
+                <Cell
+                  key={`cell-${index}`}
                   fill={entry.color}
                   className="transition-all duration-200"
+                  as={motion.path}
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.2 }}
                 />
               ))}
             </Pie>
@@ -126,12 +126,19 @@ export default function TotalSales() {
         </ResponsiveContainer>
       </div>
       <div className="space-y-4 mt-8">
-        {data.map((item) => (
-          <div key={item.name} className="flex items-center justify-between">
+        {data.map((item, index) => (
+          <motion.div
+            key={item.name}
+            className="flex items-center justify-between"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            whileHover={{ scale: 1.02 }}
+          >
             <div className="flex items-center gap-2">
-              <div 
-                className="w-2 h-2 rounded-full" 
-                style={{ backgroundColor: item.color }} 
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{ backgroundColor: item.color }}
               />
               <span className="text-sm text-gray-900 dark:text-white">
                 {item.name}
@@ -140,9 +147,10 @@ export default function TotalSales() {
             <span className="text-sm font-medium text-gray-900 dark:text-white">
               ${item.value.toFixed(2)}
             </span>
-          </div>
+          </motion.div>
         ))}
       </div>
+
     </div>
-  )
+  );
 }

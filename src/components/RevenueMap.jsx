@@ -1,6 +1,7 @@
 import React from 'react';
 import { VectorMap } from '@react-jvectormap/core';
 import { worldMill } from '@react-jvectormap/world';
+import { motion } from 'framer-motion';
 
 const locations = [
   { city: 'New York', value: '72K', progress: 72, coordinates: [40.7128, -74.0060] },
@@ -11,8 +12,8 @@ const locations = [
 
 function WorldMap() {
   return (
-    <div className="p-5 bg-card-background  rounded-xl">
-      <h3 className="text-2xl font-semibold dark:text-white mb-1">Revenue by Location</h3>
+    <div className="p-5 bg-card-background rounded-xl">
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 sm:mb-0">Revenue by Location</h3>
       <div className="h-40 relative m-1 flex justify-center">
         <VectorMap
           map={worldMill}
@@ -62,18 +63,40 @@ function WorldMap() {
       </div>
       <div className="space-y-4">
         {locations.map((location) => (
-          <div key={location.city} className="space-y-1">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-900 dark:text-white">{location.city}</div>
-              <div className="text-sm font-medium text-gray-900 dark:text-white">{location.value}</div>
-            </div>
-            <div className="h-1 w-full  rounded-full overflow-hidden">
-              <div 
+          <motion.div 
+            key={location.city} 
+            className="space-y-1"
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "tween", duration: 0.2 }}
+          >
+            <motion.div 
+              className="flex items-center justify-between"
+              whileHover={{ x: 2 }}
+              transition={{ type: "tween", duration: 0.2 }}
+            >
+              <motion.div 
+                className="text-sm text-gray-900 dark:text-white"
+                whileHover={{ fontWeight: 600 }}
+              >
+                {location.city}
+              </motion.div>
+              <motion.div 
+                className="text-sm font-medium text-gray-900 dark:text-white"
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {location.value}
+              </motion.div>
+            </motion.div>
+            <div className="h-1 w-full rounded-full overflow-hidden">
+              <motion.div 
                 className="h-full bg-sky-200/50 rounded-full transition-all duration-500"
                 style={{ width: `${location.progress}%` }}
+                whileHover={{ opacity: 0.8 }}
+                transition={{ duration: 0.2 }}
               />
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
