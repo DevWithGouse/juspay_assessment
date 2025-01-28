@@ -112,7 +112,7 @@ export default function RevenueChart() {
               axisLine={false} 
               tickLine={false} 
               tick={{ fill: "#94A3B8", fontSize: 12 }} 
-              dx={10}
+              padding={{left:10, right:10}}
             />
             <YAxis
               axisLine={false}
